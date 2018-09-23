@@ -33,7 +33,8 @@ public class Player : MonoBehaviour
     void Run()
     {
         float controlThrow = CrossPlatformInputManager.GetAxis("Horizontal");
-        myRigidbody.velocity = new Vector2(controlThrow * runSpeed, myRigidbody.velocity.y);
+        Vector2 runVelocity = new Vector2(controlThrow * runSpeed, myRigidbody.velocity.y);
+        myRigidbody.velocity = runVelocity;
         bool playerHasHorizontalSpeed = Mathf.Abs(myRigidbody.velocity.x) > Mathf.Epsilon;
         myAnimator.SetBool("Walking", playerHasHorizontalSpeed);
     }
@@ -42,13 +43,14 @@ public class Player : MonoBehaviour
     {
         if (!myCollider2D.IsTouchingLayers(LayerMask.GetMask("Climbing")))
         {
-            myRigidbody.gravityScale = gravityScaleAtStart;
             myAnimator.SetBool("Climbing", false);
+            myRigidbody.gravityScale = gravityScaleAtStart;
             return;
         }
-        myRigidbody.gravityScale = 0f;
         float controlThrow = CrossPlatformInputManager.GetAxis("Vertical");
-        myRigidbody.velocity = new Vector2(myRigidbody.velocity.y, controlThrow * climbSpeed);
+        Vector2 climbVelocity = new Vector2(myRigidbody.velocity.y, controlThrow * climbSpeed);
+        myRigidbody.velocity = climbVelocity;
+        myRigidbody.gravityScale = 0f;
         bool playerHasVerticalSpeed = Mathf.Abs(myRigidbody.velocity.y) > Mathf.Epsilon;
         myAnimator.SetBool("Climbing", playerHasVerticalSpeed);
     }
